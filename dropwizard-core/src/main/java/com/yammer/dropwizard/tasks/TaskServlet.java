@@ -2,6 +2,7 @@ package com.yammer.dropwizard.tasks;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMultimap;
+import com.google.common.net.HttpHeaders;
 import com.yammer.dropwizard.logging.Log;
 
 import javax.servlet.ServletException;
@@ -45,6 +46,7 @@ public class TaskServlet extends HttpServlet {
         if (task != null) {
             try {
                 resp.setContentType(MediaType.TEXT_PLAIN);
+                resp.setHeader(HttpHeaders.CONNECTION, "close");
                 final PrintWriter output = resp.getWriter();
                 try {
                     task.execute(getParams(req), output);

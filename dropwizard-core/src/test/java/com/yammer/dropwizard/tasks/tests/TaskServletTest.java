@@ -2,6 +2,7 @@ package com.yammer.dropwizard.tasks.tests;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMultimap;
+import com.google.common.net.HttpHeaders;
 import com.yammer.dropwizard.tasks.Task;
 import com.yammer.dropwizard.tasks.TaskServlet;
 import org.junit.Before;
@@ -88,5 +89,16 @@ public class TaskServletTest {
         servlet.service(request, response);
 
         verify(response).sendError(500);
+    }
+
+    @Test
+    public void disablesKeepAlive() throws Exception {
+        when(request.getMethod()).thenReturn("POST");
+        when(request.getPathInfo()).thenReturn("/gc");
+        when(response.getWriter()).thenReturn(mock(PrintWriter.class));
+
+        servlet.service(request, response);
+
+        verify(response).setHeader(HttpHeaders.CONNECTION, "close");
     }
 }
